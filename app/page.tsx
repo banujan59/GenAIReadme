@@ -1,4 +1,5 @@
 import DirectoryList from './DirectoryList';
+import Form from "./form";
 
 export default function Home() {
   return (
@@ -6,6 +7,8 @@ export default function Home() {
       <h1 className='mainHeader'>Available repositories:</h1>
             <br/>
       <DirectoryList />
+      <hr/>
+      <Form/>
     </main>
   );
 }

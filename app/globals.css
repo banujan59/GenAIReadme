@@ -32,8 +32,23 @@ body {
   }
 }
 
+main hr
+{
+  width: 100%;
+}
+
 .mainHeader
 {
   font-size: 36px;
   text-decoration: underline;
+}
+
+.UserInputForm
+{
+  text-align: center;
+}
+
+.UserInputForm input
+{
+  margin: 0px 10px 0px 10px;
 }
