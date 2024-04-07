@@ -1,6 +1,9 @@
 "use server";
 import { revalidatePath } from "next/cache";
  import { z } from "zod";
+ import githubProjectPath from "./GitHubProjectPaths";
+ import { exec } from "child_process";
+
 
 
  function ValidateDates(startDate : string, endDate : string) 
@@ -13,6 +16,18 @@ import { revalidatePath } from "next/cache";
     else 
     return false;
 }
+
+function ExecuteCommand(command) {
+    return new Promise((resolve, reject) => {
+      exec(command, (error, stdout) => {
+        if (error) {
+          reject(error);
+          return;
+        }
+        resolve(stdout);
+      });
+    });
+  }
 
 export async function createCommitList(
     prevState: {
@@ -36,9 +51,10 @@ export async function createCommitList(
   
     const data = parse.data;
 
-
+    const cmd = "dir " + githubProjectPath;
+    const commandOutput = await ExecuteCommand(cmd);
 
     // Success, return data
     revalidatePath("/");
-    return { message: `Added todo from ${data.startDate} to ${data.endDate}` };
+    return { message: `${commandOutput}` };
   }
