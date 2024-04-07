@@ -32,9 +32,34 @@ body {
   }
 }
 
+
+button {
+  background-color: black;
+  border-radius: 4px;
+  color: white;
+  padding: 10px 24px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  font-size: 16px;
+  outline-offset: 4px;
+  border: solid 2px black;
+
+  transition: 0.5s;
+}
+
+button:hover {
+  font-weight: bold;
+}
+
 main hr
 {
   width: 100%;
+}
+
+.projectSpan label
+{
+  margin-right: 20px;
 }
 
 .mainHeader
