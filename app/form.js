@@ -1,35 +1,17 @@
 'use client'
 import React, { useState } from 'react';
+import { useFormState, useFormStatus } from "react-dom";
+import { createCommitList } from "@/app/actions";
 
-export default function From()
+export default function Form()
 {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
-    const [formOutput, setFormOutput] = useState('');
 
-    function ValidateDates(startDate, endDate) 
-    {
-        const start = new Date(startDate);
-        const end = new Date(endDate);
-      
-        if (end > start) 
-          return true;
-         else 
-          return false;
-      }
-
-    function SubmitForm(event)
-    {
-        event.preventDefault();
-        setFormOutput("");
-
-        if(startDate == "" || endDate == "" || !ValidateDates(startDate, endDate))
-            setFormOutput("Make sure the dates ranges are valid !");
-        
-    }
+    const [state, formAction] = useFormState(createCommitList)
 
     return (
-        <form className='UserInputForm' onSubmit={SubmitForm}>
+        <form className='UserInputForm' /*onSubmit={SubmitForm}*/ action={formAction}>
             <h3>Choose date range of commits:</h3>
             <br/>
             <label>Start date:</label>
@@ -41,7 +23,7 @@ export default function From()
             <br/><br/>
 
             <button>Submit</button>
-            <p>{formOutput}</p>
+            <p>{state?.message}</p>
         </form>
     );
 }
