@@ -37,11 +37,13 @@ export async function createCommitList(
   ) {
     const schema = z.object({
         startDate: z.string().min(1),
-        endDate: z.string().min(1)
+        endDate: z.string().min(1),
+        project: z.string().min(1)
     });
     const parse = schema.safeParse({
         startDate: formData.get("startDate"),
         endDate: formData.get("endDate"),
+        project: formData.get("project"),
     });
   
     if (!parse.success || !ValidateDates(parse.data.startDate, parse.data.endDate)) 
@@ -54,7 +56,6 @@ export async function createCommitList(
     const cmd = "dir " + githubProjectPath;
     const commandOutput = await ExecuteCommand(cmd);
 
-    // Success, return data
     revalidatePath("/");
     return { message: `${commandOutput}` };
   }

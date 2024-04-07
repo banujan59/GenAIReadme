@@ -52,20 +52,15 @@ button:hover {
   font-weight: bold;
 }
 
-main hr
-{
-  width: 100%;
-}
-
-.projectSpan label
-{
-  margin-right: 20px;
-}
-
 .mainHeader
 {
   font-size: 36px;
   text-decoration: underline;
+}
+
+.UserInputForm .projectSpan label
+{
+  margin-right: 20px;
 }
 
 .UserInputForm
@@ -73,7 +68,7 @@ main hr
   text-align: center;
 }
 
-.UserInputForm input
+.UserInputForm input[type=date]
 {
   margin: 0px 10px 0px 10px;
 }
