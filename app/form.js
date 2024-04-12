@@ -24,10 +24,10 @@ export default function Form({directories})
             <h3>Choose date range of commits:</h3>
             <br/>
             <label>Start date:</label>
-            <input type="date" id="startDate" name="startDate" value={startDate} onChange={(event) => { setStartDate(event.target.value);}}/>
+            <input type="date" id="startDate" name="startDate" value={startDate} onChange={(event) => { setStartDate(event.target.value);}} required/>
 
             <label>End date:</label>
-            <input type="date" id="endDate" name="endDate" value={endDate} onChange={(event) => { setEndDate(event.target.value);}}/>
+            <input type="date" id="endDate" name="endDate" value={endDate} onChange={(event) => { setEndDate(event.target.value);}} required/>
 
             <br/><br/>
 
