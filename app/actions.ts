@@ -58,10 +58,13 @@ export async function createCommitList(
     await ExecuteCommand(cmd);
 
     // get information about the Git commits
-    cmd = 'git log --pretty=format:"%h - %s - %b" --since="' + data.startDate + '" --until="' + data.endDate + '"'
+    const prettyFormatOutput = '{\\"id\\": \\"%h\\", \\"title\\" : \\"%s\\", \\"description\\" : \\"%b\\"},';
+    cmd = 'git log --pretty=format:"' + prettyFormatOutput + '" --since="' + data.startDate + '" --until="' + data.endDate + '"'
     const commandOutput = await ExecuteCommand(cmd);
-    console.log(commandOutput)
+
+    const jsonStr = '{"commits":  [' + commandOutput + ']}'
+    console.log(jsonStr)
 
     revalidatePath("/");
-    return { message: `${commandOutput}` };
+    return { message: `${jsonStr}` };
   }
