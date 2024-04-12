@@ -1,10 +1,9 @@
 "use server";
 import { revalidatePath } from "next/cache";
- import { z } from "zod";
- import githubProjectPath from "./GitHubProjectPaths";
- import { exec } from "child_process";
-
-
+import { z } from "zod";
+import githubProjectPath from "./GitHubProjectPaths";
+import { exec } from "child_process";
+import path from 'path';
 
  function ValidateDates(startDate : string, endDate : string) 
  {
@@ -53,7 +52,8 @@ export async function createCommitList(
   
     const data = parse.data;
 
-    const cmd = "dir " + githubProjectPath;
+    const projectPath = path.join(githubProjectPath, data.project)
+    const cmd = "dir " + projectPath;
     const commandOutput = await ExecuteCommand(cmd);
 
     revalidatePath("/");
