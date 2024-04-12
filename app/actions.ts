@@ -52,9 +52,15 @@ export async function createCommitList(
   
     const data = parse.data;
 
+    // change directory to the GitHub repository
     const projectPath = path.join(githubProjectPath, data.project)
-    const cmd = "dir " + projectPath;
+    let cmd = 'cd "' + projectPath + '"'
+    await ExecuteCommand(cmd);
+
+    // get information about the Git commits
+    cmd = 'git log --pretty=format:"%h - %s - %b" --since="' + data.startDate + '" --until="' + data.endDate + '"'
     const commandOutput = await ExecuteCommand(cmd);
+    console.log(commandOutput)
 
     revalidatePath("/");
     return { message: `${commandOutput}` };
