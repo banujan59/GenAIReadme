@@ -2,13 +2,14 @@
 import React, { useState } from 'react';
 import { useFormState } from "react-dom";
 import { createCommitList } from "@/app/actions";
+import GPTIO from "./GPTIO"
 
 export default function Form({directories})
 {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
 
-    const [serverResponse, formAction] = useFormState(createCommitList)
+    const [serverResponse, formAction] = useFormState(createCommitList);
 
     return (
         <form className='UserInputForm' action={formAction}>
@@ -32,7 +33,9 @@ export default function Form({directories})
             <br/><br/>
 
             <button>Submit</button>
-            <p>{serverResponse?.message}</p>
+
+            <br/><br/>
+            <GPTIO gitCommits={serverResponse?.message}/>
         </form>
     );
 }

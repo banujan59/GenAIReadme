@@ -16,7 +16,7 @@ import path from 'path';
     return false;
 }
 
-function ExecuteCommand(command) {
+function ExecuteCommand(command : string) : string {
     return new Promise((resolve, reject) => {
       exec(command, (error, stdout) => {
         if (error) {
@@ -52,10 +52,26 @@ export async function createCommitList(
   
     const data = parse.data;
 
+    // change directory to the GitHub repository
     const projectPath = path.join(githubProjectPath, data.project)
-    const cmd = "dir " + projectPath;
-    const commandOutput = await ExecuteCommand(cmd);
+    let cmd = 'cd "' + projectPath + '"'
+    await ExecuteCommand(cmd);
+
+    // get information about the Git commits
+    // #DBQ# will be replace by double quotes later when reating the JSON
+    const prettyFormatOutput = '{#DBQ#id#DBQ#: #DBQ#%h#DBQ#, #DBQ#title#DBQ# : #DBQ#%s#DBQ#, #DBQ#description#DBQ# : #DBQ#%b#DBQ#},';
+    cmd = 'git log --pretty=format:"' + prettyFormatOutput + '" --since="' + data.startDate + '" --until="' + data.endDate + '"'
+    let commandOutput = await ExecuteCommand(cmd);
+
+    // replace all double quotes found in description or commit titles
+    commandOutput = commandOutput.replace(/"/g, "'");
+    commandOutput = commandOutput.replace(/\n|\t|\r|\*/g, '');
+    commandOutput = commandOutput.substring(0, commandOutput.length - 1); // remove last comma from the pretty output
+
+    // Prepare JSON string
+    commandOutput = commandOutput.replace(/#DBQ#/g, '"');
+    const jsonStr = '{"commits":  [' + commandOutput + ']}'
 
     revalidatePath("/");
-    return { message: `${commandOutput}` };
+    return { message: `${jsonStr}` };
   }
