@@ -64,7 +64,9 @@ export async function createCommitList(
     let commandOutput = await ExecuteCommand(cmd);
 
     // replace all double quotes found in description or commit titles
-    commandOutput = commandOutput.replace(/"/g, '\\"');
+    commandOutput = commandOutput.replace(/"/g, "'");
+    commandOutput = commandOutput.replace(/\n|\t|\r|\*/g, '');
+    commandOutput = commandOutput.substring(0, commandOutput.length - 1); // remove last comma from the pretty output
 
     // Prepare JSON string
     commandOutput = commandOutput.replace(/#DBQ#/g, '"');
