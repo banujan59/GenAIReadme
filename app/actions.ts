@@ -16,7 +16,7 @@ import path from 'path';
     return false;
 }
 
-function ExecuteCommand(command) {
+function ExecuteCommand(command : string) : string {
     return new Promise((resolve, reject) => {
       exec(command, (error, stdout) => {
         if (error) {
@@ -58,12 +58,17 @@ export async function createCommitList(
     await ExecuteCommand(cmd);
 
     // get information about the Git commits
-    const prettyFormatOutput = '{\\"id\\": \\"%h\\", \\"title\\" : \\"%s\\", \\"description\\" : \\"%b\\"},';
+    // #DBQ# will be replace by double quotes later when reating the JSON
+    const prettyFormatOutput = '{#DBQ#id#DBQ#: #DBQ#%h#DBQ#, #DBQ#title#DBQ# : #DBQ#%s#DBQ#, #DBQ#description#DBQ# : #DBQ#%b#DBQ#},';
     cmd = 'git log --pretty=format:"' + prettyFormatOutput + '" --since="' + data.startDate + '" --until="' + data.endDate + '"'
-    const commandOutput = await ExecuteCommand(cmd);
+    let commandOutput = await ExecuteCommand(cmd);
 
+    // replace all double quotes found in description or commit titles
+    commandOutput = commandOutput.replace(/"/g, '\\"');
+
+    // Prepare JSON string
+    commandOutput = commandOutput.replace(/#DBQ#/g, '"');
     const jsonStr = '{"commits":  [' + commandOutput + ']}'
-    console.log(jsonStr)
 
     revalidatePath("/");
     return { message: `${jsonStr}` };
