@@ -75,3 +75,29 @@ export async function createCommitList(
     revalidatePath("/");
     return { message: `${jsonStr}` };
   }
+
+
+  export async function GenerateGPTOutput(
+    prevState: {
+      message: string;
+    },
+    formData: FormData,
+  )  {
+    const schema = z.object({
+      gptInput: z.string().min(1)
+    });
+    const parse = schema.safeParse({
+        gptInput: formData.get("gptInput")
+    });
+
+    if (!parse.success) 
+    {
+      return { message: "ERROR parsing GPT input" };
+    }
+
+    const gptInput = parse.data.gptInput;
+
+
+    revalidatePath("/");
+    return { message: `this is a test with your input: ${gptInput}` };
+  }

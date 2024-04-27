@@ -1,10 +1,14 @@
 'use client'
 import React from 'react';
+import { useFormState } from "react-dom";
+import { GenerateGPTOutput } from "@/app/actions";
 
 export default function GPTIO({gitCommits})
 {
+    const [gptOutputResponse, formAction] = useFormState(GenerateGPTOutput);
+
     let gptInput = "";
-    let gptOutput = "";
+    let gptOutput = gptOutputResponse?.message;
 
     if(gitCommits)
     {
@@ -18,20 +22,22 @@ export default function GPTIO({gitCommits})
         });
     }
     return (
-        <p className='gptIO'>
-            <p>
-                Here is your GPT input:
+        <div>
+            <form className='gptIO' action={formAction}>
+                <p>
+                    Here is your GPT input:
+                    <br/>
+                    <textarea value={gptInput} name='gptInput' readOnly></textarea>
+                    <button>Send to GPT</button>
+                </p>
                 <br/>
-                <textarea value={gptInput} readOnly></textarea>
-            </p>
-            <p>
-                <button>Send to GPT</button>
-                
-                <br/><br/>
-                Here is your GPT output:
-                <br/>
-                <textarea value={gptOutput} readOnly></textarea>
-            </p>
-        </p>
+                <p>
+                    Here is your GPT output:
+                    <br/>
+                    <textarea value={gptOutput} readOnly></textarea>
+                </p>
+            </form>
+        </div>
+        
     );
 }
