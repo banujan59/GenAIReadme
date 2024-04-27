@@ -1,9 +1,8 @@
-import DirectoryList from './DirectoryList';
 import Form from "./form";
 import fs from 'fs';
 import githubProjectPath from "./GitHubProjectPaths"
 
-const getDirectories = (source) => {
+const getDirectories = (source: string) => {
   return fs.readdirSync(source, { withFileTypes: true })
       .filter((dirent) => dirent.isDirectory())
       .map((dirent) => dirent.name);
