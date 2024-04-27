@@ -4,6 +4,7 @@ import React from 'react';
 export default function GPTIO({gitCommits})
 {
     let gptInput = "";
+    let gptOutput = "";
 
     if(gitCommits)
     {
@@ -18,9 +19,19 @@ export default function GPTIO({gitCommits})
     }
     return (
         <p className='gptIO'>
-            Here is your GPT input:
-            <br/>
-            <textarea value={gptInput} readOnly></textarea>
+            <p>
+                Here is your GPT input:
+                <br/>
+                <textarea value={gptInput} readOnly></textarea>
+            </p>
+            <p>
+                <button>Send to GPT</button>
+                
+                <br/><br/>
+                Here is your GPT output:
+                <br/>
+                <textarea value={gptOutput} readOnly></textarea>
+            </p>
         </p>
     );
 }
