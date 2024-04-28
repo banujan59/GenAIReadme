@@ -3,6 +3,8 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { exec } from "child_process";
 import path from 'path';
+import os from 'os';
+
 
  function ValidateDates(startDate, endDate) 
  {
@@ -50,15 +52,21 @@ export async function createCommitList(
     const data = parse.data;
 
     // change directory to the GitHub repository
+    const platform = os.platform();
+    let commandSeperator = ";";
+    if (platform === 'win32') {
+      commandSeperator = "&&";
+    }
+
     const githubProjectPath = process.env.GENAI_README_GIT_PROJECT_DIRECTORY;
     const projectPath = path.join(githubProjectPath, data.project)
-    let cmd = 'cd "' + projectPath + '"'
-    await ExecuteCommand(cmd);
+    let cmd = 'cd "' + projectPath + '" ' + commandSeperator + " ";
 
     // get information about the Git commits
     // #DBQ# will be replace by double quotes later when reating the JSON
     const prettyFormatOutput = '{#DBQ#id#DBQ#: #DBQ#%h#DBQ#, #DBQ#title#DBQ# : #DBQ#%s#DBQ#, #DBQ#description#DBQ# : #DBQ#%b#DBQ#},';
-    cmd = 'git log --pretty=format:"' + prettyFormatOutput + '" --since="' + data.startDate + '" --until="' + data.endDate + '"'
+    cmd += 'git log --pretty=format:"' + prettyFormatOutput + '" --since="' + data.startDate + '" --until="' + data.endDate + '"'
+    console.log("command is: "+ cmd);
     let commandOutput = await ExecuteCommand(cmd);
 
     // replace all double quotes found in description or commit titles
