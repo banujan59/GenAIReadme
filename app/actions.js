@@ -4,7 +4,7 @@ import { z } from "zod";
 import { exec } from "child_process";
 import path from 'path';
 
- function ValidateDates(startDate : string, endDate : string) 
+ function ValidateDates(startDate, endDate) 
  {
     const start = new Date(startDate);
     const end = new Date(endDate);
@@ -15,7 +15,7 @@ import path from 'path';
     return false;
 }
 
-function ExecuteCommand(command : string) : string {
+function ExecuteCommand(command) {
     return new Promise((resolve, reject) => {
       exec(command, (error, stdout) => {
         if (error) {
@@ -28,10 +28,8 @@ function ExecuteCommand(command : string) : string {
   }
 
 export async function createCommitList(
-    prevState: {
-      message: string;
-    },
-    formData: FormData,
+    prevState,
+    formData,
   ) {
     const schema = z.object({
         startDate: z.string().min(1),

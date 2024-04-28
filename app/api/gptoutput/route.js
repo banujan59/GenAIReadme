@@ -32,6 +32,7 @@ export async function POST(request) {
           gptOutput += chunk.choices[0]?.delta?.content || "";
       }
 
+
       isGenerating = false;
     }
    
