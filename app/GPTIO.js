@@ -23,7 +23,7 @@ export default function GPTIO({gitCommits})
     function SendToGPT(event)
     {
         event.preventDefault();
-        if(gptInput === "")
+        if(gptInput === "" || isGenerating)
             return; 
 
         setGptOutput("");
