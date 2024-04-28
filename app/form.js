@@ -14,7 +14,7 @@ export default function Form({directories})
     return (
         <div>
             <form className='UserInputForm' action={formAction}>
-                <p>Select the GitHub project:</p>
+                <p>Select the git project:</p>
                 <br/>
                 {directories.map((dirName, index) => (
                     <span key={dirName} className='projectSpan'>
