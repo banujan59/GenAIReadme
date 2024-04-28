@@ -1,24 +1,30 @@
 'use client'
 import React, {useState, useEffect} from 'react';
+import GPTOutput from "./GPTOutput"
 
 export default function GPTIO({gitCommits})
 {
-    let gptInput = "";
-
-    if(gitCommits)
-    {
-        gptInput = "Act as a technical writer. Generate a paragrah that outlines the new changes for the current version of the software. ";
-        gptInput += "Make it easy to understand. The target audience is the client of the application. ";
-        gptInput += "Gather the required information from the following git titles and descriptions:\n\n";
-        const jsonObj = JSON.parse(gitCommits);
-        jsonObj.commits.forEach(element => {
-            gptInput += "title: " + element.title + "\n"; 
-            gptInput += "description: " + element.description + "\n\n";
-        });
-    }
-
+    const [gptInput, setGptInput] = useState("");
     const [gptOutput, setGptOutput] = useState("");
     const [isGenerating, setIsGenerating] = useState(false);
+
+    useEffect(() => {
+        let gptInputText = "";
+    
+        if(gitCommits)
+        {
+            gptInputText = "Act as a technical writer. Generate a paragraph that outlines the new changes for the current version of the software. ";
+            gptInputText += "Make it easy to understand. The target audience is the client of the application. ";
+            gptInputText += "Gather the required information from the following git titles and descriptions:\n\n";
+            const jsonObj = JSON.parse(gitCommits);
+            jsonObj.commits.forEach(element => {
+                gptInputText += "title: " + element.title + "\n"; 
+                gptInputText += "description: " + element.description + "\n\n";
+            });
+        }
+    
+        setGptInput(gptInputText);
+    }, [gitCommits]); 
 
     function SendToGPT(event)
     {
@@ -39,48 +45,17 @@ export default function GPTIO({gitCommits})
          setIsGenerating(true);
     }
 
-    useEffect(() => {
-        let intervalId;
-
-        if(isGenerating)
-        {
-            intervalId = setInterval(async () => {
-                if (isGenerating) 
-                {
-                    const res = await fetch('/api/gptoutput/');
-                    const data = await res.json();
-                     
-                    setGptOutput(data.gptOutput);
-                    setIsGenerating(data.isGenerating)
-                } 
-                else 
-                {
-                    clearInterval(interval);
-                }
-            }, 250);
-        }
- 
-        return () => {
-            if(intervalId)
-                clearInterval(intervalId);
-        }
-    }, [isGenerating]);
-
     return (
         <div>
             <form className='gptIO'>
                 <p>
-                    Here is your GPT input:
+                    Here is your GPT input (you can adjust it if needed):
                     <br/>
-                    <textarea value={gptInput} name='gptInput' readOnly></textarea>
+                    <textarea value={gptInput} name='gptInput' onChange={(event)=>{setGptInput(event.target.value);}} readOnly={!gitCommits}></textarea>
                     <button onClick={SendToGPT}>Send to GPT</button>
                 </p>
                 <br/>
-                <p>
-                    Here is your GPT output:
-                    <br/>
-                    <textarea value={gptOutput} readOnly></textarea>
-                </p>
+                <GPTOutput gptInput={gptInput} isGenerating={isGenerating} setIsGenerating={setIsGenerating}/>
             </form>
         </div>
         
