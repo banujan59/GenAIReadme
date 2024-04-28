@@ -1,19 +1,12 @@
-import DirectoryList from './DirectoryList';
 import Form from "./form";
-import fs from 'fs';
-import githubProjectPath from "./GitHubProjectPaths"
+import ListGitHubProjects from "./GitHubProjectPaths"
 
-const getDirectories = (source) => {
-  return fs.readdirSync(source, { withFileTypes: true })
-      .filter((dirent) => dirent.isDirectory())
-      .map((dirent) => dirent.name);
-};
-const directories = getDirectories(githubProjectPath);
+export default async function Home() {
+  const directories = await ListGitHubProjects();
 
-export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center p-24">
-      <h1 className='mainHeader'>Available repositories:</h1>
+      <h1 className='mainHeader'>GenAI Readme</h1>
             <br/>
       <Form directories={directories}/>
     </main>

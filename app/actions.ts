@@ -1,7 +1,6 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import githubProjectPath from "./GitHubProjectPaths";
 import { exec } from "child_process";
 import path from 'path';
 
@@ -53,6 +52,7 @@ export async function createCommitList(
     const data = parse.data;
 
     // change directory to the GitHub repository
+    const githubProjectPath = process.env.GENAI_README_GIT_PROJECT_DIRECTORY;
     const projectPath = path.join(githubProjectPath, data.project)
     let cmd = 'cd "' + projectPath + '"'
     await ExecuteCommand(cmd);
