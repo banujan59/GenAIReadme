@@ -1,14 +1,9 @@
 'use client'
-import React from 'react';
-import { useFormState } from "react-dom";
-import { GenerateGPTOutput } from "@/app/actions";
+import React, {useState, useEffect} from 'react';
 
 export default function GPTIO({gitCommits})
 {
-    const [gptOutputResponse, formAction] = useFormState(GenerateGPTOutput);
-
     let gptInput = "";
-    let gptOutput = gptOutputResponse?.message;
 
     if(gitCommits)
     {
@@ -21,14 +16,64 @@ export default function GPTIO({gitCommits})
             gptInput += "description: " + element.description + "\n\n";
         });
     }
+
+    const [gptOutput, setGptOutput] = useState("");
+    const [isGenerating, setIsGenerating] = useState(false);
+
+    function SendToGPT(event)
+    {
+        event.preventDefault();
+        if(gptInput === "")
+            return; 
+
+        setGptOutput("");
+        
+        fetch('/api/gptoutput/', {
+            method: 'post',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({
+                gptInput : gptInput
+            })
+         });
+
+         setIsGenerating(true);
+    }
+
+    useEffect(() => {
+        let intervalId;
+
+        if(isGenerating)
+        {
+            intervalId = setInterval(async () => {
+                if (isGenerating) 
+                {
+                    const res = await fetch('/api/gptoutput/');
+                    const data = await res.json();
+                     
+                    setGptOutput(data.gptOutput);
+                    setIsGenerating(data.isGenerating)
+                } 
+                else 
+                {
+                    clearInterval(interval);
+                }
+            }, 250);
+        }
+ 
+        return () => {
+            if(intervalId)
+                clearInterval(intervalId);
+        }
+    }, [isGenerating]);
+
     return (
         <div>
-            <form className='gptIO' action={formAction}>
+            <form className='gptIO'>
                 <p>
                     Here is your GPT input:
                     <br/>
                     <textarea value={gptInput} name='gptInput' readOnly></textarea>
-                    <button>Send to GPT</button>
+                    <button onClick={SendToGPT}>Send to GPT</button>
                 </p>
                 <br/>
                 <p>
