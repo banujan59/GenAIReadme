@@ -32,6 +32,11 @@ body {
   }
 }
 
+.formContainer
+{
+  width: 800px;
+}
+
 
 button {
   background-color: black;

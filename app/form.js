@@ -12,7 +12,7 @@ export default function Form({directories})
     const [serverResponse, formAction] = useFormState(createCommitList);
 
     return (
-        <div>
+        <div class="formContainer">
             <form className='UserInputForm' action={formAction}>
                 <p>Select the git project:</p>
                 <br/>
