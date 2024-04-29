@@ -66,7 +66,6 @@ export async function createCommitList(
     // #DBQ# will be replace by double quotes later when reating the JSON
     const prettyFormatOutput = '{#DBQ#id#DBQ#: #DBQ#%h#DBQ#, #DBQ#title#DBQ# : #DBQ#%s#DBQ#, #DBQ#description#DBQ# : #DBQ#%b#DBQ#},';
     cmd += 'git log --pretty=format:"' + prettyFormatOutput + '" --since="' + data.startDate + '" --until="' + data.endDate + '"'
-    console.log("command is: "+ cmd);
     let commandOutput = await ExecuteCommand(cmd);
 
     // replace all double quotes found in description or commit titles

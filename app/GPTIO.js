@@ -55,7 +55,7 @@ export default function GPTIO({gitCommits})
                     <button onClick={SendToGPT}>Send to GPT</button>
                 </p>
                 <br/>
-                <GPTOutput gptInput={gptInput} isGenerating={isGenerating} setIsGenerating={setIsGenerating}/>
+                <GPTOutput gptOutput={gptOutput} setGptOutput={setGptOutput} isGenerating={isGenerating} setIsGenerating={setIsGenerating}/>
             </form>
         </div>
         
