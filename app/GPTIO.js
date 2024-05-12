@@ -62,18 +62,20 @@ export default function GPTIO({gitCommits})
                     <div>
                         <b>Creativity Level: </b>
                         {['Creative', 'Balanced', 'Precise'].map((option, index) => (
-                            <label key={index}>
-                            <input
-                                type="radio"
-                                value={index}
-                                checked={gptTemperature === index}
-                                onChange={handleGPTTemperatureChange}
-                            />
-                            {option}
-                            </label>
+                            <span key={option+"CreativityOption"}>
+                                <input
+                                    id={option+"CreativityOption"}
+                                    type="radio"
+                                    value={index}
+                                    checked={gptTemperature === index}
+                                    onChange={handleGPTTemperatureChange}
+                                />
+                                <label htmlFor={option+"CreativityOption"}>{option}</label>
+                            </span>
                         ))}
                         </div>
 
+                    <br/>
                     <button onClick={SendToGPT}>Send to GPT</button>
                 </div>
                 <br/>

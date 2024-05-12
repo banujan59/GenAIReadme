@@ -49,15 +49,16 @@ button:hover {
   font-weight: bold;
 }
 
+input[type=radio]
+{
+  margin-left: 15px;
+  margin-right: 5px;;
+}
+
 .mainHeader
 {
   font-size: 36px;
   text-decoration: underline;
-}
-
-.UserInputForm .projectSpan label
-{
-  margin-right: 20px;
 }
 
 .UserInputForm
