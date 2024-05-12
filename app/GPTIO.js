@@ -5,8 +5,14 @@ import GPTOutput from "./GPTOutput"
 export default function GPTIO({gitCommits})
 {
     const [gptInput, setGptInput] = useState("");
+    const [gptTemperature, setGPTTemperature] = useState(1);
+
     const [gptOutput, setGptOutput] = useState("");
     const [isGenerating, setIsGenerating] = useState(false);
+
+    const handleGPTTemperatureChange = (event) => {
+        setGPTTemperature(parseInt(event.target.value));
+    };
 
     useEffect(() => {
         let gptInputText = "";
@@ -37,7 +43,8 @@ export default function GPTIO({gitCommits})
             method: 'post',
             headers: {'Content-Type':'application/json'},
             body: JSON.stringify({
-                gptInput : gptInput
+                gptInput : gptInput,
+                gptTemperature: gptTemperature
             })
          });
 
@@ -47,12 +54,30 @@ export default function GPTIO({gitCommits})
     return (
         <div>
             <form className='gptIO'>
-                <p>
+                <div>
                     Here is your GPT input (you can adjust it if needed):
                     <br/>
                     <textarea value={gptInput} name='gptInput' onChange={(event)=>{setGptInput(event.target.value);}} readOnly={!gitCommits}></textarea>
+                    
+                    <div>
+                        <b>Creativity Level: </b>
+                        {['Creative', 'Balanced', 'Precise'].map((option, index) => (
+                            <span key={option+"CreativityOption"}>
+                                <input
+                                    id={option+"CreativityOption"}
+                                    type="radio"
+                                    value={index}
+                                    checked={gptTemperature === index}
+                                    onChange={handleGPTTemperatureChange}
+                                />
+                                <label htmlFor={option+"CreativityOption"}>{option}</label>
+                            </span>
+                        ))}
+                        </div>
+
+                    <br/>
                     <button onClick={SendToGPT}>Send to GPT</button>
-                </p>
+                </div>
                 <br/>
                 <GPTOutput gptOutput={gptOutput} setGptOutput={setGptOutput} isGenerating={isGenerating} setIsGenerating={setIsGenerating}/>
             </form>
