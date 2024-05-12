@@ -13,9 +13,8 @@ export default function GPTIO({gitCommits})
     
         if(gitCommits)
         {
-            gptInputText = "Act as a technical writer. Generate a paragraph that outlines the new changes for the current version of the software. ";
-            gptInputText += "Make it easy to understand. The target audience is the client of the application. ";
-            gptInputText += "Gather the required information from the following git titles and descriptions:\n\n";
+            gptInputText = "Generate a paragraph that outlines the changes in the new version of the software based on the following "
+                + "git titles and descriptions:\n\n";
             const jsonObj = JSON.parse(gitCommits);
             jsonObj.commits.forEach(element => {
                 gptInputText += "title: " + element.title + "\n"; 
