@@ -5,14 +5,14 @@ import GPTOutput from "./GPTOutput"
 export default function GPTIO({gitCommits})
 {
     const [gptInput, setGptInput] = useState("");
-    const [gptTemperature, setGPTTemperature] = useState('Balanced');
+    const [gptTemperature, setGPTTemperature] = useState(1);
 
     const [gptOutput, setGptOutput] = useState("");
     const [isGenerating, setIsGenerating] = useState(false);
 
-    const handleChange = (event) => {
-        setGPTTemperature(event.target.value);
-      };
+    const handleGPTTemperatureChange = (event) => {
+        setGPTTemperature(parseInt(event.target.value));
+    };
 
     useEffect(() => {
         let gptInputText = "";
@@ -37,17 +37,18 @@ export default function GPTIO({gitCommits})
         if(gptInput === "" || isGenerating)
             return; 
 
-        setGptOutput("The selected creativity is: " + gptTemperature);
+        setGptOutput("");
         
-        // fetch('/api/gptoutput/', {
-        //     method: 'post',
-        //     headers: {'Content-Type':'application/json'},
-        //     body: JSON.stringify({
-        //         gptInput : gptInput
-        //     })
-        //  });
+        fetch('/api/gptoutput/', {
+            method: 'post',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({
+                gptInput : gptInput,
+                gptTemperature: gptTemperature
+            })
+         });
 
-        //  setIsGenerating(true);
+         setIsGenerating(true);
     }
 
     return (
@@ -60,33 +61,17 @@ export default function GPTIO({gitCommits})
                     
                     <div>
                         <b>Creativity Level: </b>
-                        <label>
+                        {['Creative', 'Balanced', 'Precise'].map((option, index) => (
+                            <label key={index}>
                             <input
-                            type="radio"
-                            value="Creative"
-                            checked={gptTemperature === 'Creative'}
-                            onChange={handleChange}
+                                type="radio"
+                                value={index}
+                                checked={gptTemperature === index}
+                                onChange={handleGPTTemperatureChange}
                             />
-                            Creative
-                        </label>
-                        <label>
-                            <input
-                            type="radio"
-                            value="Balanced"
-                            checked={gptTemperature === 'Balanced'}
-                            onChange={handleChange}
-                            />
-                            Balanced
-                        </label>
-                        <label>
-                            <input
-                            type="radio"
-                            value="Precise"
-                            checked={gptTemperature === 'Precise'}
-                            onChange={handleChange}
-                            />
-                            Precise
-                        </label>
+                            {option}
+                            </label>
+                        ))}
                         </div>
 
                     <button onClick={SendToGPT}>Send to GPT</button>

@@ -27,7 +27,7 @@ export async function GET(request)
 
 export async function POST(request) {
     const data = await request.json();
-    const validToGenerate = (data.gptInput != undefined) && (process.env.GENAI_README_OPENAI_SECRET_KEY != undefined);
+    const validToGenerate = (data.gptInput != undefined) && (data.gptTemperature != undefined) && (process.env.GENAI_README_OPENAI_SECRET_KEY != undefined);
 
     if(validToGenerate)
     {
@@ -37,11 +37,14 @@ export async function POST(request) {
       let messageHistory = initialMessages;
       messageHistory.push({"role" : "user", "content": data.gptInput});
 
+      const selectedTemperature = Math.max(0, Math.min(2, selectedTemperature)); // Clamps the value from 0 to 2
+
       const openai = new OpenAI({apiKey: process.env.GENAI_README_OPENAI_SECRET_KEY});
       const stream = await openai.chat.completions.create({
           model: "gpt-3.5-turbo",
           messages: messageHistory,
           stream: true,
+          temperature: selectedTemperature
       });
       
       for await (const chunk of stream) {
