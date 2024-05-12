@@ -37,7 +37,7 @@ export async function POST(request) {
       let messageHistory = initialMessages;
       messageHistory.push({"role" : "user", "content": data.gptInput});
 
-      const selectedTemperature = Math.max(0, Math.min(2, selectedTemperature)); // Clamps the value from 0 to 2
+      const selectedTemperature = Math.max(0, Math.min(2, data.gptTemperature)); // Clamps the value from 0 to 2
 
       const openai = new OpenAI({apiKey: process.env.GENAI_README_OPENAI_SECRET_KEY});
       const stream = await openai.chat.completions.create({
